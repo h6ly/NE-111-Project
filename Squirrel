@@ -1,10 +1,13 @@
-# Squirrel Eat Squirrel (a 2D Katamari Damacy clone)
-# By Al Sweigart al@inventwithpython.com
-# http://inventwithpython.com/pygame
-# Released under a "Simplified BSD" license
+'''
+Project Members
+Hudson Ly - ID#: 20959975, Initial HL
+John Litschko - ID#: 20963128, Initial JL
+Jonathan Tuling - ID#: 20953504, Initial JT
+Peyton Diebolt - ID#: 20975271, Initial PD
+'''
 
-import random, sys, time, math, pygame
-from pygame.locals import *
+import random, sys, time, math, pygame #Imports all the needed libraries in one line. -JL
+from pygame.locals import * #Imports the whole library so it doesn't need to be referenced. - JL
 
 FPS = 30 # frames per second to update the screen
 WINWIDTH = 640 # width of the program's window, in pixels
@@ -61,10 +64,10 @@ Grass data structure keys:
 """
 
 def main():
-    global FPSCLOCK, DISPLAYSURF, BASICFONT, L_SQUIR_IMG, R_SQUIR_IMG, GRASSIMAGES
+    global FPSCLOCK, DISPLAYSURF, BASICFONT, L_SQUIR_IMG, R_SQUIR_IMG, GRASSIMAGES #References variables outside of the function. -JL 
 
-    pygame.init()
-    FPSCLOCK = pygame.time.Clock()
+    pygame.init() #Initializes all of the imported pygame modules. -JL
+    FPSCLOCK = pygame.time.Clock() #Creates clock object to track time. -JL
     pygame.display.set_icon(pygame.image.load('gameicon.png'))
     DISPLAYSURF = pygame.display.set_mode((WINWIDTH, WINHEIGHT))
     pygame.display.set_caption('Squirrel Eat Squirrel')
@@ -166,7 +169,7 @@ def runGame():
         while len(squirrelObjs) < NUMSQUIRRELS:
             squirrelObjs.append(makeNewSquirrel(camerax, cameray))
 
-        # Alter camerax and cameray if the view is "camerslack" 
+        # adjust camerax and cameray if beyond the "camera slack"
         playerCenterx = playerObj['x'] + int(playerObj['size'] / 2)
         playerCentery = playerObj['y'] + int(playerObj['size'] / 2)
         if (camerax + HALF_WINWIDTH) - playerCenterx > CAMERASLACK:
@@ -178,10 +181,10 @@ def runGame():
         elif playerCentery - (cameray + HALF_WINHEIGHT) > CAMERASLACK:
             cameray = playerCentery - CAMERASLACK - HALF_WINHEIGHT
 
-        # creates a grass-like backgound 
+        # draw the green background
         DISPLAYSURF.fill(GRASSCOLOR)
 
-        # composes grass objects on-screen 
+        # draw all the grass objects on the screen
         for gObj in grassObjs:
             gRect = pygame.Rect( (gObj['x'] - camerax,
                                   gObj['y'] - cameray,
@@ -190,7 +193,7 @@ def runGame():
             DISPLAYSURF.blit(GRASSIMAGES[gObj['grassImage']], gRect)
 
 
-        # compses other squirrels
+        # draw the other squirrels
         for sObj in squirrelObjs:
             sObj['rect'] = pygame.Rect( (sObj['x'] - camerax,
                                          sObj['y'] - cameray - getBounceAmount(sObj['bounce'], sObj['bouncerate'], sObj['bounceheight']),
@@ -199,7 +202,7 @@ def runGame():
             DISPLAYSURF.blit(sObj['surface'], sObj['rect'])
 
 
-        # composes controllable squirrel 
+        # draw the player squirrel
         flashIsOn = round(time.time(), 1) * 10 % 2 == 1
         if not gameOverMode and not (invulnerableMode and flashIsOn):
             playerObj['rect'] = pygame.Rect( (playerObj['x'] - camerax,
@@ -209,10 +212,10 @@ def runGame():
             DISPLAYSURF.blit(playerObj['surface'], playerObj['rect'])
 
 
-        # composes the hipoint bar
+        # draw the health meter
         drawHealthMeter(playerObj['health'])
 
-        for event in pygame.event.get(): # loop handles events
+        for event in pygame.event.get(): # event handling loop
             if event.type == QUIT:
                 terminate()
 
@@ -226,20 +229,20 @@ def runGame():
                 elif event.key in (K_LEFT, K_a):
                     moveRight = False
                     moveLeft = True
-                    if playerObj['facing'] != LEFT: # player image changes
+                    if playerObj['facing'] != LEFT: # change player image
                         playerObj['surface'] = pygame.transform.scale(L_SQUIR_IMG, (playerObj['size'], playerObj['size']))
                     playerObj['facing'] = LEFT
                 elif event.key in (K_RIGHT, K_d):
                     moveLeft = False
                     moveRight = True
-                    if playerObj['facing'] != RIGHT: # player image changes
+                    if playerObj['facing'] != RIGHT: # change player image
                         playerObj['surface'] = pygame.transform.scale(R_SQUIR_IMG, (playerObj['size'], playerObj['size']))
                     playerObj['facing'] = RIGHT
                 elif winMode and event.key == K_r:
                     return
 
             elif event.type == KEYUP:
-                # stops the controllable squirrel
+                # stop moving the player's squirrel
                 if event.key in (K_LEFT, K_a):
                     moveLeft = False
                 elif event.key in (K_RIGHT, K_d):
