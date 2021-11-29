@@ -4,6 +4,10 @@ Hudson Ly - ID#: 20959975, Initial HL
 John Litschko - ID#: 20963128, Initial JL
 Jonathan Tuling - ID#: 20953504, Initial JT
 Peyton Diebolt - ID#: 20975271, Initial PD
+
+To Do: 
+1) change enemies
+2) enemies scale with player size
 '''
 
 import random, sys, time, math, pygame #Imports all the needed libraries in one line. -JL
