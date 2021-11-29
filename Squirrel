@@ -170,6 +170,7 @@ def runGame():
         while len(squirrelObjs) < NUMSQUIRRELS:
             squirrelObjs.append(makeNewSquirrel(camerax, cameray))
 
+        
         # adjust camerax and cameray if beyond the "camera slack"
         playerCenterx = playerObj['x'] + int(playerObj['size'] / 2)
         playerCentery = playerObj['y'] + int(playerObj['size'] / 2)
@@ -183,7 +184,7 @@ def runGame():
             cameray = playerCentery - CAMERASLACK - HALF_WINHEIGHT
 
         # draw the green background
-        DISPLAYSURF.fill(OCEAN)
+        DISPLAYSURF.fill(GRASSCOLOR)
 
         # draw all the grass objects on the screen
         for gObj in grassObjs:
@@ -255,7 +256,6 @@ def runGame():
 
                 elif event.key == K_ESCAPE:
                     terminate()
-
         if not gameOverMode:
             # actually move the player
             if moveLeft:
