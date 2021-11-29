@@ -118,7 +118,6 @@ def runGame():
                  'size': STARTSIZE,
                  'x': HALF_WINWIDTH,
                  'y': HALF_WINHEIGHT,
-                 'bounce':0,
                  'health': MAXHEALTH}
 
     moveLeft  = False
@@ -170,7 +169,6 @@ def runGame():
         while len(squirrelObjs) < NUMSQUIRRELS:
             squirrelObjs.append(makeNewSquirrel(camerax, cameray))
 
-        
         # adjust camerax and cameray if beyond the "camera slack"
         playerCenterx = playerObj['x'] + int(playerObj['size'] / 2)
         playerCentery = playerObj['y'] + int(playerObj['size'] / 2)
@@ -184,7 +182,7 @@ def runGame():
             cameray = playerCentery - CAMERASLACK - HALF_WINHEIGHT
 
         # draw the green background
-        DISPLAYSURF.fill(GRASSCOLOR)
+        DISPLAYSURF.fill(OCEAN)
 
         # draw all the grass objects on the screen
         for gObj in grassObjs:
@@ -208,7 +206,7 @@ def runGame():
         flashIsOn = round(time.time(), 1) * 10 % 2 == 1
         if not gameOverMode and not (invulnerableMode and flashIsOn):
             playerObj['rect'] = pygame.Rect( (playerObj['x'] - camerax,
-                                              playerObj['y'] - cameray - getBounceAmount(playerObj['bounce'], BOUNCERATE, BOUNCEHEIGHT),
+                                              playerObj['y'] - cameray,
                                               playerObj['size'],
                                               playerObj['size']) )
             DISPLAYSURF.blit(playerObj['surface'], playerObj['rect'])
@@ -256,6 +254,7 @@ def runGame():
 
                 elif event.key == K_ESCAPE:
                     terminate()
+
         if not gameOverMode:
             # actually move the player
             if moveLeft:
@@ -266,13 +265,8 @@ def runGame():
                 playerObj['y'] -= MOVERATE
             if moveDown:
                 playerObj['y'] += MOVERATE
-
-            if (moveLeft or moveRight or moveUp or moveDown) or playerObj['bounce'] != 0:
-                playerObj['bounce'] += 1
-
-            if playerObj['bounce'] > BOUNCERATE:
-                playerObj['bounce'] = 0 # reset bounce amount
-
+                
+              
             # check if the player has collided with any squirrels
             for i in range(len(squirrelObjs)-1, -1, -1):
                 sqObj = squirrelObjs[i]
