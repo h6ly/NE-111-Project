@@ -4,19 +4,6 @@ Hudson Ly - ID#: 20959975, Initial HL
 John Litschko - ID#: 20963128, Initial JL
 Jonathan Tuling - ID#: 20953504, Initial JT
 Peyton Diebolt - ID#: 20975271, Initial PD
-
-To do:
-1) Comments
-2) Change graphics
-    a) change background
-    b) change enemies
-    c) do something with grass
-3) Get rid of bounce on the player
-
-    Optional:
-    1) Enemies scale up in size with the player
-    2) 
-
 '''
 
 import random, sys, time, math, pygame #Imports all the needed libraries in one line. -JL
@@ -77,7 +64,8 @@ Grass data structure keys:
 """
 
 def main():
-    global FPSCLOCK, DISPLAYSURF, BASICFONT, L_SQUIR_IMG, R_SQUIR_IMG, GRASSIMAGES #References variables outside of the function. -JL 
+    global FPSCLOCK, DISPLAYSURF, BASICFONT, L_SQUIR_IMG, R_SQUIR_IMG, GRASSIMAGES #References variables outside of the function or designates variables to not be limited
+                                                                                   # to the function's space. -JL 
 
     pygame.init() #Initializes all of the imported pygame modules. -JL
     FPSCLOCK = pygame.time.Clock() #Creates clock object to track time. -JL
@@ -86,47 +74,44 @@ def main():
     pygame.display.set_caption('Squirrel Eat Squirrel')
     BASICFONT = pygame.font.Font('freesansbold.ttf', 32)
 
-    # load the image files
+    # Loads the image files into the game. -JL
     L_SQUIR_IMG = pygame.image.load('squirrel.png')
-    R_SQUIR_IMG = pygame.transform.flip(L_SQUIR_IMG, True, False)
+    R_SQUIR_IMG = pygame.transform.flip(L_SQUIR_IMG, True, False) # Reflects the image. -JL
     GRASSIMAGES = []
-    for i in range(1, 5):
-        GRASSIMAGES.append(pygame.image.load('grass%s.png' % i))
+    for i in range(1, 5): # Creates a loop that adds all files that start with grass. -JL 
+        GRASSIMAGES.append(pygame.image.load('grass%s.png' % i)) # Adds an image to the array "GRASSIMAGES". - JL
 
-    while True:
-        runGame()
+    while True: # While true is a way of making the program loop forever. -JL
+        runGame() # Of course this line runs the game function. - JL
 
 
-def runGame(): # function that starts the game and keeps the game running
-    # defining variables for the start of a new game
+def runGame():
+    # set up variables for the start of a new game
     invulnerableMode = False  # if the player is invulnerable
-    invulnerableStartTime = 0 # time the player is invulnerable
+    invulnerableStartTime = 0 # time the player became invulnerable
     gameOverMode = False      # if the player has lost
-    gameOverStartTime = 0     # how long the player survived
+    gameOverStartTime = 0     # time the player lost
     winMode = False           # if the player has won
 
     # create the surfaces to hold game text
     gameOverSurf = BASICFONT.render('Game Over', True, WHITE)
     gameOverRect = gameOverSurf.get_rect()
     gameOverRect.center = (HALF_WINWIDTH, HALF_WINHEIGHT)
-    
-    # text to show the player has won
+
     winSurf = BASICFONT.render('You have achieved OMEGA SQUIRREL!', True, WHITE)
     winRect = winSurf.get_rect()
     winRect.center = (HALF_WINWIDTH, HALF_WINHEIGHT)
-    
-    # prompt to restart
+
     winSurf2 = BASICFONT.render('(Press "r" to restart.)', True, WHITE)
     winRect2 = winSurf2.get_rect()
     winRect2.center = (HALF_WINWIDTH, HALF_WINHEIGHT + 30)
 
-    # camerax and cameray, where the camera is positioned
+    # camerax and cameray are the top left of where the camera view is
     camerax = 0
     cameray = 0
 
     grassObjs = []    # stores all the grass objects in the game
-    squirrelObjs = [] # stores all the non-player objects
-    
+    squirrelObjs = [] # stores all the non-player squirrel objects
     # stores the player object:
     playerObj = {'surface': pygame.transform.scale(L_SQUIR_IMG, (STARTSIZE, STARTSIZE)),
                  'facing': LEFT,
@@ -136,13 +121,12 @@ def runGame(): # function that starts the game and keeps the game running
                  'bounce':0,
                  'health': MAXHEALTH}
 
-    # the direction the player is moving in
     moveLeft  = False
     moveRight = False
     moveUp    = False
     moveDown  = False
 
-    # generates grass images randomly on the screen
+    # start off with some random grass images on the screen
     for i in range(10):
         grassObjs.append(makeNewGrass(camerax, cameray))
         grassObjs[i]['x'] = random.randint(0, WINWIDTH)
@@ -153,9 +137,9 @@ def runGame(): # function that starts the game and keeps the game running
         if invulnerableMode and time.time() - invulnerableStartTime > INVULNTIME:
             invulnerableMode = False
 
-        # move all the enemies
+        # move all the squirrels
         for sObj in squirrelObjs:
-            # adjust for the bounce depending on what direction is inputted
+            # move the squirrel, and adjust for their bounce
             sObj['x'] += sObj['movex']
             sObj['y'] += sObj['movey']
             sObj['bounce'] += 1
@@ -181,9 +165,9 @@ def runGame(): # function that starts the game and keeps the game running
                 del squirrelObjs[i]
 
         # add more grass & squirrels if we don't have enough.
-        while len(grassObjs) < NUMGRASS: #checks number of grass
+        while len(grassObjs) < NUMGRASS:
             grassObjs.append(makeNewGrass(camerax, cameray))
-        while len(squirrelObjs) < NUMSQUIRRELS: # checks number of enemies
+        while len(squirrelObjs) < NUMSQUIRRELS:
             squirrelObjs.append(makeNewSquirrel(camerax, cameray))
 
         # adjust camerax and cameray if beyond the "camera slack"
