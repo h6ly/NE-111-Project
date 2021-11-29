@@ -15,7 +15,7 @@ WINHEIGHT = 480 # height in pixels
 HALF_WINWIDTH = int(WINWIDTH / 2)
 HALF_WINHEIGHT = int(WINHEIGHT / 2)
 
-GRASSCOLOR = (24, 255, 0)
+OCEAN = (0, 5, 255)
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 
@@ -183,7 +183,7 @@ def runGame():
             cameray = playerCentery - CAMERASLACK - HALF_WINHEIGHT
 
         # draw the green background
-        DISPLAYSURF.fill(GRASSCOLOR)
+        DISPLAYSURF.fill(OCEAN)
 
         # draw all the grass objects on the screen
         for gObj in grassObjs:
