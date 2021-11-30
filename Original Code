@@ -3,8 +3,8 @@
 # http://inventwithpython.com/pygame
 # Released under a "Simplified BSD" license
 
-import random, sys, time, math, pygame
-from pygame.locals import *
+import random, sys, time, math, pygame #Imports all the needed libraries in one line. -JL
+from pygame.locals import *  #Imports the whole library so it doesn't need to be referenced. - JL
 
 FPS = 30 # frames per second to update the screen
 WINWIDTH = 640 # width of the program's window, in pixels
@@ -61,27 +61,27 @@ Grass data structure keys:
 """
 
 def main():
-    global FPSCLOCK, DISPLAYSURF, BASICFONT, L_SQUIR_IMG, R_SQUIR_IMG, GRASSIMAGES
-
-    pygame.init()
-    FPSCLOCK = pygame.time.Clock()
+    global FPSCLOCK, DISPLAYSURF, BASICFONT, L_SQUIR_IMG, R_SQUIR_IMG, GRASSIMAGES #References variables outside of the function or designates variables to not be limited
+                                                                                   # to the function's space. -JL
+    pygame.init()  #Initializes all of the imported pygame modules. -JL
+    FPSCLOCK = pygame.time.Clock()  #Creates clock object to track time. -JL
     pygame.display.set_icon(pygame.image.load('gameicon.png'))
     DISPLAYSURF = pygame.display.set_mode((WINWIDTH, WINHEIGHT))
     pygame.display.set_caption('Squirrel Eat Squirrel')
     BASICFONT = pygame.font.Font('freesansbold.ttf', 32)
 
-    # load the image files
+    # Loads the image files into the game. -JL
     L_SQUIR_IMG = pygame.image.load('squirrel.png')
-    R_SQUIR_IMG = pygame.transform.flip(L_SQUIR_IMG, True, False)
+    R_SQUIR_IMG = pygame.transform.flip(L_SQUIR_IMG, True, False) # Reflects the image. -JL
     GRASSIMAGES = []
-    for i in range(1, 5):
-        GRASSIMAGES.append(pygame.image.load('grass%s.png' % i))
+    for i in range(1, 5): # Creates a loop that adds all files that start with grass. -JL
+        GRASSIMAGES.append(pygame.image.load('grass%s.png' % i)) # Adds an image to the array "GRASSIMAGES". - JL
 
-    while True:
-        runGame()
+    while True: # While true is a way of making the program loop forever. -JL
+        runGame() # Of course this line calls the game function. - JL
 
 
-def runGame(): # function that starts the game and keeps the game running
+def runGame(): # This function that starts the game and keeps the it running. -JL
     # defining variables for the start of a new game
     invulnerableMode = False  # if the player is invulnerable
     invulnerableStartTime = 0 # time the player is invulnerable
