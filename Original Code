@@ -82,7 +82,7 @@ def main():
 
 
 def runGame(): # This function that starts the game and keeps the it running. -JL
-    # defining variables for the start of a new game
+    # defining variables for the start of a new game - HL
     invulnerableMode = False  # if the player is invulnerable
     invulnerableStartTime = 0 # time the player is invulnerable
     gameOverMode = False      # if the player has lost
@@ -94,7 +94,7 @@ def runGame(): # This function that starts the game and keeps the it running. -J
     gameOverRect = gameOverSurf.get_rect()
     gameOverRect.center = (HALF_WINWIDTH, HALF_WINHEIGHT)
     
-    # text to show the player has won
+    # text to show the player has won - HL
     winSurf = BASICFONT.render('You have achieved OMEGA SQUIRREL!', True, WHITE)
     winRect = winSurf.get_rect()
     winRect.center = (HALF_WINWIDTH, HALF_WINHEIGHT)
@@ -104,7 +104,7 @@ def runGame(): # This function that starts the game and keeps the it running. -J
     winRect2 = winSurf2.get_rect()
     winRect2.center = (HALF_WINWIDTH, HALF_WINHEIGHT + 30)
 
-    # camerax and cameray, where the camera is positioned
+    # camerax and cameray, where the camera is positioned on the screen - HL
     camerax = 0
     cameray = 0
 
@@ -120,13 +120,13 @@ def runGame(): # This function that starts the game and keeps the it running. -J
                  'bounce':0,
                  'health': MAXHEALTH}
 
-    # the direction the player is moving in
+    # the direction the player is moving in - HL
     moveLeft  = False
     moveRight = False
     moveUp    = False
     moveDown  = False
 
-    # generates grass images randomly on the screen
+    # generates grass images randomly on the screen - HL
     for i in range(10):
         grassObjs.append(makeNewGrass(camerax, cameray))
         grassObjs[i]['x'] = random.randint(0, WINWIDTH)
@@ -139,14 +139,14 @@ def runGame(): # This function that starts the game and keeps the it running. -J
 
         # move all the enemies
         for sObj in squirrelObjs:
-            # adjust for the bounce depending on what direction is inputted
+            # adjust for the bounce depending on what direction is inputted - HL
             sObj['x'] += sObj['movex']
             sObj['y'] += sObj['movey']
             sObj['bounce'] += 1
             if sObj['bounce'] > sObj['bouncerate']:
-                sObj['bounce'] = 0 # reset bounce amount
+                sObj['bounce'] = 0 # reset bounce amount after each movement - HL
 
-            # random chance they change direction
+            # random chance they change direction - HL
             if random.randint(0, 99) < DIRCHANGEFREQ:
                 sObj['movex'] = getRandomVelocity()
                 sObj['movey'] = getRandomVelocity()
@@ -156,7 +156,7 @@ def runGame(): # This function that starts the game and keeps the it running. -J
                     sObj['surface'] = pygame.transform.scale(L_SQUIR_IMG, (sObj['width'], sObj['height']))
 
 
-        # go through all the objects and see if any need to be deleted.
+        # go through all the objects and see if any need to be deleted. (if there are too many objects loaded) - HL
         for i in range(len(grassObjs) - 1, -1, -1):
             if isOutsideActiveArea(camerax, cameray, grassObjs[i]):
                 del grassObjs[i]
@@ -165,9 +165,9 @@ def runGame(): # This function that starts the game and keeps the it running. -J
                 del squirrelObjs[i]
 
         # add more grass & squirrels if we don't have enough.
-        while len(grassObjs) < NUMGRASS: #checks number of grass
+        while len(grassObjs) < NUMGRASS: #checks number of grass - HL
             grassObjs.append(makeNewGrass(camerax, cameray))
-        while len(squirrelObjs) < NUMSQUIRRELS: # checks number of enemies
+        while len(squirrelObjs) < NUMSQUIRRELS: # checks number of enemies - HL
             squirrelObjs.append(makeNewSquirrel(camerax, cameray))
           
         # adjust camerax and cameray if beyond the "camera slack"
