@@ -9,16 +9,16 @@ Peyton Diebolt - ID#: 20975271, Initial PD
 import random, sys, time, math, pygame #Imports all the needed libraries in one line. -JL
 from pygame.locals import * #Imports the whole library so it doesn't need to be referenced. - JL
 
+# Sets global variables that can be referenced by functions in the game. -JL
 FPS = 30 # frames per second to update the screen
 WINWIDTH = 640 # width of the program's window, in pixels
 WINHEIGHT = 480 # height in pixels
 HALF_WINWIDTH = int(WINWIDTH / 2)
 HALF_WINHEIGHT = int(WINHEIGHT / 2)
 
-OCEAN = (0, 5, 255)
+OCEAN = (106, 159, 181)
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
-WIN = (104, 255, 104)
 
 CAMERASLACK = 90     # how far from the center the squirrel moves before moving the camera
 MOVERATE = 9         # how fast the player moves
@@ -67,14 +67,14 @@ def main():
     pygame.init() #Initializes all of the imported pygame modules. -JL
     FPSCLOCK = pygame.time.Clock() #Creates clock object to track time. -JL
     pygame.display.set_icon(pygame.image.load('gameicon.png')) # Pretty self-explanatory. Displays the game icon. - JL
-    DISPLAYSURF = pygame.display.set_mode((WINWIDTH, WINHEIGHT))
-    pygame.display.set_caption('Fish Game')
+    DISPLAYSURF = pygame.display.set_mode((WINWIDTH, WINHEIGHT)) # Sets the display area where text can be shown. - JL
+    pygame.display.set_caption('Fish Game') #Adds caption 'Fish Game' onto display area. -JL
     BASICFONT = pygame.font.Font('freesansbold.ttf', 32)
 
     # Loads the image files into the game. -JL
-    L_CRABS_IMG = pygame.image.load("CRABS.png")
-    R_CRABS_IMG = pygame.transform.flip(L_CRABS_IMG, True, False)
-    L_SQUIR_IMG = pygame.image.load('squirrel.png')
+    L_CRABS_IMG = pygame.image.load("CRABS.png") #Loads the crabs image so it can be referenced by the code. -JL
+    R_CRABS_IMG = pygame.transform.flip(L_CRABS_IMG, True, False) #Transfroms the crabs image by reflecting it and asdinging it to a new variable name. -JL
+    L_SQUIR_IMG = pygame.image.load('squirrel.png') #Loads fish image so it can be referenced by the code. - JL
     R_SQUIR_IMG = pygame.transform.flip(L_SQUIR_IMG, True, False) # Reflects the image. -JL
     GRASSIMAGES = []
     for i in range(1, 5): # Creates a loop that adds all files that start with grass. -JL 
@@ -85,7 +85,7 @@ def main():
 
 
 def runGame():
-    # set up variables for the start of a new game
+    # Sets variables for the start of a new game. -JL
     invulnerableMode = False  # if the player is invulnerable
     invulnerableStartTime = 0 # time the player became invulnerable
     gameOverMode = False      # if the player has lost
@@ -93,17 +93,17 @@ def runGame():
     winMode = False           # if the player has won
 
     # create the surfaces to hold game text
-    gameOverSurf = BASICFONT.render('Game Over', True, RED)
-    gameOverRect = gameOverSurf.get_rect()
-    gameOverRect.center = (HALF_WINWIDTH, HALF_WINHEIGHT)
+    gameOverSurf = BASICFONT.render('Game Over', True, WHITE) #Sets the text, font, and colour of the game over message. -JL
+    gameOverRect = gameOverSurf.get_rect() #Creates a rectangle for the surface. - JL
+    gameOverRect.center = (HALF_WINWIDTH, HALF_WINHEIGHT) #Sets the positition of the rectangle for the display of the text. -JL
 
-    winSurf = BASICFONT.render('You won!', True, WIN)
-    winRect = winSurf.get_rect()
-    winRect.center = (HALF_WINWIDTH, HALF_WINHEIGHT)
+    winSurf = BASICFONT.render('You won!', True, WHITE) #Sets the text, font, and colour of the you won message. -JL
+    winRect = winSurf.get_rect() #Creates a rectangle for the surface. -JL
+    winRect.center = (HALF_WINWIDTH, HALF_WINHEIGHT) #Sets the position of the rectangle for the display of the text. -JL
 
-    winSurf2 = BASICFONT.render('(Press "r" to restart.)', True, WIN)
-    winRect2 = winSurf2.get_rect()
-    winRect2.center = (HALF_WINWIDTH, HALF_WINHEIGHT + 30)
+    winSurf2 = BASICFONT.render('(Press "r" to restart.)', True, WHITE) #Sets the text, font, and colour of the game restart message. -JL
+    winRect2 = winSurf2.get_rect() #Creates a rectangle for the surface. - JL
+    winRect2.center = (HALF_WINWIDTH, HALF_WINHEIGHT + 30) #Sets the position of the rectangle for the display of the text. -JL
 
     # camerax and cameray are the top left of where the camera view is
     camerax = 0
@@ -124,7 +124,7 @@ def runGame():
     moveUp    = False
     moveDown  = False
 
-    # start off with some random grass images on the screen
+    # Start off with some random images on the screen. -JL
     for i in range(35): #Changed the range of the for loop so that more images are added onto the screen. -JL
         grassObjs.append(makeNewGrass(camerax, cameray))
         grassObjs[i]['x'] = random.randint(0, WINWIDTH)
@@ -387,5 +387,6 @@ def isOutsideActiveArea(camerax, cameray, obj):
     return not boundsRect.colliderect(objRect)
 
 
-if __name__ == '__main__':
-    main()
+if __name__ == '__main__': # This code says "If the module was executed directly such as in a script or application run the game." This is necessary because
+                           # differet blocks of code have to be run at different times during the game for it to be able to be played. -JL
+    main() #This tells the computer to run the main() function and thus start the game. -JL
