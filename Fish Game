@@ -18,6 +18,7 @@ HALF_WINHEIGHT = int(WINHEIGHT / 2)
 OCEAN = (0, 5, 255)
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
+WIN = (104, 255, 104)
 
 CAMERASLACK = 90     # how far from the center the squirrel moves before moving the camera
 MOVERATE = 9         # how fast the player moves
@@ -92,15 +93,15 @@ def runGame():
     winMode = False           # if the player has won
 
     # create the surfaces to hold game text
-    gameOverSurf = BASICFONT.render('Game Over', True, WHITE)
+    gameOverSurf = BASICFONT.render('Game Over', True, RED)
     gameOverRect = gameOverSurf.get_rect()
     gameOverRect.center = (HALF_WINWIDTH, HALF_WINHEIGHT)
 
-    winSurf = BASICFONT.render('You won!', True, WHITE)
+    winSurf = BASICFONT.render('You won!', True, WIN)
     winRect = winSurf.get_rect()
     winRect.center = (HALF_WINWIDTH, HALF_WINHEIGHT)
 
-    winSurf2 = BASICFONT.render('(Press "r" to restart.)', True, WHITE)
+    winSurf2 = BASICFONT.render('(Press "r" to restart.)', True, WIN)
     winRect2 = winSurf2.get_rect()
     winRect2.center = (HALF_WINWIDTH, HALF_WINHEIGHT + 30)
 
