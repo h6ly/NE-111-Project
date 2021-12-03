@@ -396,5 +396,6 @@ def isOutsideActiveArea(camerax, cameray, obj):
     return not boundsRect.colliderect(objRect)
 
 
-if __name__ == '__main__':
-    main()
+if __name__ == '__main__':  # This code says "If the module was executed directly such as in a script or application run the game." This is necessary because
+                            # differet blocks of code have to be run at different times during the game for it to be able to be played. -JL
+    main() #This tells the computer to run the main() function and thus start the game. -JL
