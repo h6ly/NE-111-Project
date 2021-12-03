@@ -21,8 +21,7 @@ RED = (255, 0, 0)
 
 CAMERASLACK = 90     # how far from the center the squirrel moves before moving the camera
 MOVERATE = 9         # how fast the player moves
-BOUNCERATE = 6       # how fast the player bounces (large is slower)
-BOUNCEHEIGHT = 30    # how high the player bounces
+#Deleted variables that referenced 'bounce'. - JL
 STARTSIZE = 25       # how big the player starts off
 WINSIZE = 300        # how big the player needs to be to win
 INVULNTIME = 2       # how long the player is invulnerable after being hit in seconds
@@ -56,9 +55,7 @@ Enemy Squirrel data structure keys:
     'movey' - how many pixels per frame the squirrel moves vertically. A negative integer is moving up, a positive moving down.
     'width' - the width of the squirrel's image, in pixels
     'height' - the height of the squirrel's image, in pixels
-    'bounce' - represents at what point in a bounce the player is in. 0 means standing (no bounce), up to BOUNCERATE (the completion of the bounce)
-    'bouncerate' - how quickly the squirrel bounces. A lower number means a quicker bounce.
-    'bounceheight' - how high (in pixels) the squirrel bounces
+    
 Grass data structure keys:
     'grassImage' - an integer that refers to the index of the pygame.Surface object in GRASSIMAGES used for this grass object
 """
@@ -127,7 +124,7 @@ def runGame():
     moveDown  = False
 
     # start off with some random grass images on the screen
-    for i in range(20): #Changed the range of the for loop so that more images are added onto the screen. -JL
+    for i in range(35): #Changed the range of the for loop so that more images are added onto the screen. -JL
         grassObjs.append(makeNewGrass(camerax, cameray))
         grassObjs[i]['x'] = random.randint(0, WINWIDTH)
         grassObjs[i]['y'] = random.randint(0, WINHEIGHT)
