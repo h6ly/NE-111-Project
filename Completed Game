@@ -15,7 +15,7 @@ WINHEIGHT = 480 # height in pixels
 HALF_WINWIDTH = int(WINWIDTH / 2)
 HALF_WINHEIGHT = int(WINHEIGHT / 2)
 
-OCEAN = (106, 159, 181) # Colour of the background. - JL
+OCEAN = (106, 159, 240) # Colour of the background. - JL
 WHITE = (255, 255, 255) # Colour of the text. -JL
 RED = (255, 0, 0) # Colour of the health. - JL
 WIN = (104, 238, 104) # Colour of the winning text. - JL
