@@ -14,33 +14,19 @@ WINWIDTH = 640 # width of the program's window, in pixels
 WINHEIGHT = 480 # height in pixels
 HALF_WINWIDTH = int(WINWIDTH / 2)
 HALF_WINHEIGHT = int(WINHEIGHT / 2)
+res = (640,480) # sets screen resolution
+screen = pygame.display.set_mode(res) # opens up a window
 
 OCEAN = (106, 159, 240) # Colour of the background. - JL
 WHITE = (255, 255, 255) # Colour of the text. -JL
 RED = (255, 0, 0) # Colour of the health. - JL
 WIN = (104, 238, 104) # Colour of the winning text. - JL
-
-# screen resolution 
-res = (640,480) 
-  
-# opens up a window 
-screen = pygame.display.set_mode(res)  
-  
-# light shade of the button 
 colour_light = (170,170,170) 
-  
-# dark shade of the button 
 colour_dark = (100,100,100) 
 
-# stores the width of the 
-# screen into a variable 
-width = screen.get_width() 
-  
-# stores the height of the 
-# screen into a variable 
-height = screen.get_height() 
 
-
+width = screen.get_width()  #stores screen width
+height = screen.get_height() #stores screen height
 CAMERASLACK = 90     # how far from the center the crab moves before moving the camera
 MOVERATE = 9         # how fast the player moves
 BOUNCERATE = 6       # how fast the player bounces (large is slower)
@@ -118,26 +104,26 @@ def main():
             if ev.type == pygame.QUIT: 
                 pygame.quit() 
               
-            #checks if a mouse is clicked 
+            #checks if the mouse is clicked - JT 
             if ev.type == pygame.MOUSEBUTTONDOWN: 
               
-                #if the mouse is clicked on the 
-                # button the game is terminated 
+                #if quit button is clicked game is closed - JT
                 if width/2.5 <= mouse[0] <= width/2.5+100 and height/2 <= mouse[1] <= height/2+40: 
                     pygame.quit() 
                 
+                #if survival button is clicked survival plays - JT
                 if width/1.85 <= mouse[0] <= width/1.85+180 and height/3 <= mouse[1] <= height/3+40: 
                     runSurvival() # Of course this line runs the survival function. - JL
                
+                #if play button is pressed game is played - JT
                 if width/4 <= mouse[0] <= width/4+180 and height/3 <= mouse[1] <= height/3+40: 
                     runGame() # Of course this line runs the game function. - JL 
                 
-        # stores the (x,y) coordinates into 
-        # the variable as a tuple 
+        # stores the position of the mouse - JT
         mouse = pygame.mouse.get_pos()
         
-        # if mouse is hovered on a button it 
-        # changes to lighter shade 
+        # boxes are created - JT
+        # if mouse is on the box the colour of the rectangle becomes darker - JT
         if width/1.85 <= mouse[0] <= width/1.85+140 and height/3 <= mouse[1] <= height/3+40: 
             pygame.draw.rect(screen,colour_light,[width/1.85,height/3,180,40]) 
         else: 
@@ -154,18 +140,18 @@ def main():
         else: 
             pygame.draw.rect(screen,colour_dark,[width/4,height/3,100,40])
     
-        # superimposing the text onto our button 
+        # Draws the text onto quit button - JT
         screen.blit(text2 , (width/2.5+15,height/2)) 
     
-        # superimposing the text onto our button 
+        # Draws the text onto Survival button - JT
         screen.blit(text1 , (width/1.85+20,height/3)) 
       
-        # superimposing the text onto our button 
+        # Draws the text onto play button - JT
         screen.blit(text3, (width/4+20,height/3))
     
-        # updates the frames of the game 
-        pygame.display.update() 
-
+        # updates the frames of the game - JT
+        pygame.display.update()
+        
 def runGame():
     MAXHEALTH = 3        # how much health the player starts with
     # Sets variables for the start of a new game. -JL
