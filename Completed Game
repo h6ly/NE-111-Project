@@ -509,30 +509,30 @@ def runSurvival():
             if event.type == QUIT:
                 terminate()
 
-            elif event.type == KEYDOWN:
-                if event.key in (K_UP, K_w):
+            elif event.type == KEYDOWN: # when a key is being pressed... - PD
+                if event.key in (K_UP, K_w): # if the up key is pressed - PD
                     moveDown = False
-                    moveUp = True
-                elif event.key in (K_DOWN, K_s):
+                    moveUp = True # moveUp is true - PD
+                elif event.key in (K_DOWN, K_s): # if the down key is pressed - PD
                     moveUp = False
-                    moveDown = True
-                elif event.key in (K_LEFT, K_a):
+                    moveDown = True # moveDown is true - PD
+                elif event.key in (K_LEFT, K_a): # if the left key is pressed - PD
                     moveRight = False
-                    moveLeft = True
-                    if playerObj['facing'] != LEFT: # flips player image - JT
+                    moveLeft = True # moveLeft is true - PD
+                    if playerObj['facing'] != LEFT: # change player image to facing left - PD
                         playerObj['surface'] = pygame.transform.scale(L_FISH_IMG, (playerObj['size'], playerObj['size']))
                     playerObj['facing'] = LEFT
-                elif event.key in (K_RIGHT, K_d):
+                elif event.key in (K_RIGHT, K_d): # if the right key is pressed - PD
                     moveLeft = False
-                    moveRight = True
-                    if playerObj['facing'] != RIGHT: # flips player image - JT
+                    moveRight = True # moveRight is true - PD
+                    if playerObj['facing'] != RIGHT: # change player image to facing right - PD
                         playerObj['surface'] = pygame.transform.scale(R_FISH_IMG, (playerObj['size'], playerObj['size']))
                     playerObj['facing'] = RIGHT
-                elif winMode and event.key == K_r:
+                elif winMode and event.key == K_r: 
                     return
 
             elif event.type == KEYUP:
-                # stop moving the player's fish - JT
+                # if a key is not being pressed stop moving the character's fish - PD
                 if event.key in (K_LEFT, K_a):
                     moveLeft = False
                 elif event.key in (K_RIGHT, K_d):
@@ -542,11 +542,11 @@ def runSurvival():
                 elif event.key in (K_DOWN, K_s):
                     moveDown = False
 
-                elif event.key == K_ESCAPE:
-                    terminate()
+                elif event.key == K_ESCAPE: # when the esc key is pressed - PD
+                    terminate() # stop game - PD
 
         if not gameOverMode:
-            # actually move the player
+            # actually move the player when the corresponding variable is true (see above) - PD
             if moveLeft:
                 playerObj['x'] -= MOVERATE
             if moveRight:
@@ -557,14 +557,14 @@ def runSurvival():
                 playerObj['y'] += MOVERATE
                 
               
-            # check if the player has collided with any crabs
+            # check if the player has collided with any crabs - PD
             for i in range(len(crabObjs)-1, -1, -1):
                 sqObj = crabObjs[i]
                 if 'rect' in sqObj and playerObj['rect'].colliderect(sqObj['rect']):
-                    # a player/crab collision has occurred
+                    # a player/crab collision has occurred - PD
 
                     if sqObj['width'] * sqObj['height'] <= playerObj['size']**2:
-                        # player is larger and eats the crab
+                        # player is larger and eats the crab - PD
                         playerObj['size'] += int( (sqObj['width'] * sqObj['height'])**0.2 ) + 1
                         del crabObjs[i]
 
@@ -574,37 +574,37 @@ def runSurvival():
                             playerObj['surface'] = pygame.transform.scale(R_FISH_IMG, (playerObj['size'], playerObj['size']))
 
                     elif not invulnerableMode:
-                        # player is smaller and takes damage
+                        # player is smaller and takes damage - PD
                         invulnerableMode = True
                         invulnerableStartTime = time.time()
                         playerObj['health'] -= 1
                         if playerObj['health'] == 0:
-                            gameOverMode = True # turn on "game over mode"
+                            gameOverMode = True # turn on "game over mode" - PD
                             gameOverStartTime = time.time()
                             endtime = time.perf_counter()
         
         else:
             display_time = str(round((endtime - starttime), 2))
             
-            winSurf = BASICFONT.render(display_time, True, WHITE) #Sets the text, font, and colour of the you won message. -JL
+            winSurf = BASICFONT.render(display_time, True, WHITE) #Sets the text, font, and colour of the you won message. - PD
             winRect = winSurf.get_rect() #Creates a rectangle for the surface. -JL
-            winRect.center = (HALF_WINWIDTH, HALF_WINHEIGHT+30) #Sets the position of the rectangle for the display of the text. -JL
+            winRect.center = (HALF_WINWIDTH, HALF_WINHEIGHT+30) #Sets the position of the rectangle for the display of the text. - PD
            
-            # game is over, show "game over" text
+            # game is over, show "game over" text - PD
             DISPLAYSURF.blit(gameOverSurf, gameOverRect)
             DISPLAYSURF.blit(winSurf, winRect)
             DISPLAYSURF.blit(winSurf2, winRect2)
             if time.time() - gameOverStartTime > GAMEOVERTIME:
-                return # end the current game
+                return # end the current game - PD
 
         pygame.display.update()
         FPSCLOCK.tick(FPS)
 
 
 def drawHealthMeter(currentHealth):
-    for i in range(currentHealth): # draw red health bars
+    for i in range(currentHealth): # draw red health bars - PD
         pygame.draw.rect(DISPLAYSURF, RED,   (15, 5 + (10 * MAXHEALTH) - i * 10, 20, 10))
-    for i in range(MAXHEALTH): # draw the white outlines
+    for i in range(MAXHEALTH): # draw the white outlines - PD
         pygame.draw.rect(DISPLAYSURF, WHITE, (15, 5 + (10 * MAXHEALTH) - i * 10, 20, 10), 1)
 
 
@@ -614,10 +614,10 @@ def terminate():
 
 
 def getBounceAmount(currentBounce, bounceRate, bounceHeight):
-    # Returns the number of pixels to offset based on the bounce.
-    # Larger bounceRate means a slower bounce.
-    # Larger bounceHeight means a higher bounce.
-    # currentBounce will always be less than bounceRate
+    # Returns the number of pixels to offset based on the bounce. - PD
+    # Larger bounceRate means a slower bounce. - PD
+    # Larger bounceHeight means a higher bounce. - PD
+    # currentBounce will always be less than bounceRate - PD
     return int(math.sin( (math.pi / float(bounceRate)) * currentBounce ) * bounceHeight)
 
 def getRandomVelocity():
@@ -629,13 +629,13 @@ def getRandomVelocity():
 
 
 def getRandomOffCameraPos(camerax, cameray, objWidth, objHeight):
-    # create a Rect of the camera view
+    # create a Rect of the camera view - PD
     cameraRect = pygame.Rect(camerax, cameray, WINWIDTH, WINHEIGHT)
     while True:
         x = random.randint(camerax - WINWIDTH, camerax + (2 * WINWIDTH))
         y = random.randint(cameray - WINHEIGHT, cameray + (2 * WINHEIGHT))
-        # create a Rect object with the random coordinates and use colliderect()
-        # to make sure the right edge isn't in the camera view.
+        # create a Rect object with the random coordinates and use colliderect() - PD
+        # to make sure the right edge isn't in the camera view. - PD
         objRect = pygame.Rect(x, y, objWidth, objHeight)
         if not objRect.colliderect(cameraRect):
             return x, y
@@ -652,7 +652,7 @@ def makeNewGiantCrab(camerax, cameray):
     sq['movey'] = getRandomVelocity()
     if sq['movex'] < 0: # crab is facing left
         sq['surface'] = pygame.transform.scale(L_CRABS_IMG, (sq['width'], sq['height']))
-    else: # crab is facing right
+    else: # crab is facing right - PD
         sq['surface'] = pygame.transform.scale(R_CRABS_IMG, (sq['width'], sq['height']))
     sq['bounce'] = 0
     sq['bouncerate'] = random.randint(10, 18)
@@ -668,7 +668,7 @@ def makeNewCrab(camerax, cameray):
     sq['x'], sq['y'] = getRandomOffCameraPos(camerax, cameray, sq['width'], sq['height'])
     sq['movex'] = getRandomVelocity()
     sq['movey'] = getRandomVelocity()
-    if sq['movex'] < 0: # crab is facing left
+    if sq['movex'] < 0: # crab is facing left - PD
         sq['surface'] = pygame.transform.scale(L_CRABS_IMG, (sq['width'], sq['height']))
     else: # crab is facing right
         sq['surface'] = pygame.transform.scale(R_CRABS_IMG, (sq['width'], sq['height']))
@@ -677,7 +677,7 @@ def makeNewCrab(camerax, cameray):
     sq['bounceheight'] = random.randint(10, 50)
     return sq
 
-def makeNewGrass(camerax, cameray):
+def makeNewGrass(camerax, cameray): # this decides the dimensions of the grass and placement - PD
     gr = {}
     gr['grassImage'] = random.randint(0, len(GRASSIMAGES) - 1)
     gr['width']  = GRASSIMAGES[0].get_width()
@@ -688,8 +688,8 @@ def makeNewGrass(camerax, cameray):
 
 
 def isOutsideActiveArea(camerax, cameray, obj):
-    # Return False if camerax and cameray are more than
-    # a half-window length beyond the edge of the window.
+    # Return False if camerax and cameray are more than - PD
+    # a half-window length beyond the edge of the window. - PD
     boundsLeftEdge = camerax - WINWIDTH
     boundsTopEdge = cameray - WINHEIGHT
     boundsRect = pygame.Rect(boundsLeftEdge, boundsTopEdge, WINWIDTH * 3, WINHEIGHT * 3)
