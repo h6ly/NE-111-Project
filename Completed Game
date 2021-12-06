@@ -15,10 +15,10 @@ WINHEIGHT = 480 # height in pixels
 HALF_WINWIDTH = int(WINWIDTH / 2)
 HALF_WINHEIGHT = int(WINHEIGHT / 2)
 
-OCEAN = (106, 159, 240)
-WHITE = (255, 255, 255)
-RED = (255, 0, 0)
-WIN = (104, 238, 104)
+OCEAN = (106, 159, 181) # Colour of the background. - JL
+WHITE = (255, 255, 255) # Colour of the text. -JL
+RED = (255, 0, 0) # Colour of the health. - JL
+WIN = (104, 238, 104) # Colour of the winning text. - JL
 
 # screen resolution 
 res = (640,480) 
@@ -60,7 +60,7 @@ LEFT = 'left'
 RIGHT = 'right'
 
 """
-This program has three data structures to represent the player, enemy crabs, and grass background objects. The data structures are dictionaries with the following keys:
+This program has three data structures to represent the player, enemy crabs, and grass background objects (that are not actually grass). The data structures are dictionaries with the following keys:
 
 Keys used by all three data structures:
     'x' - the left edge coordinate of the object in the game world (not a pixel coordinate on the screen)
@@ -111,7 +111,7 @@ def main():
         GRASSIMAGES.append(pygame.image.load('grass%s.png' % i)) # Adds an image to the array "GRASSIMAGES". - JL
 
     while True: # While true is a way of making the program loop forever. -JL
-        screen.fill((106, 159, 181))
+        screen.fill((106, 159, 181)) 
         
         for ev in pygame.event.get(): 
           
