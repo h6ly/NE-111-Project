@@ -41,7 +41,7 @@ width = screen.get_width()
 height = screen.get_height() 
 
 
-CAMERASLACK = 90     # how far from the center the squirrel moves before moving the camera
+CAMERASLACK = 90     # how far from the center the crab moves before moving the camera
 MOVERATE = 9         # how fast the player moves
 BOUNCERATE = 6       # how fast the player bounces (large is slower)
 BOUNCEHEIGHT = 30    # how high the player bounces
@@ -52,41 +52,41 @@ GAMEOVERTIME = 4     # how long the "game over" text stays on the screen in seco
 MAXHEALTH = 3   # how much health the player starts with
 
 NUMGRASS = 80        # number of grass objects in the active area
-NUMSQUIRRELS = 30    # number of squirrels in the active area
-SQUIRRELMINSPEED = 3 # slowest squirrel speed
-SQUIRRELMAXSPEED = 9 # fastest squirrel speed
+NUMCRABS = 30    # number of crabs in the active area
+CRABMINSPEED = 3 # slowest crab speed
+CRABMAXSPEED = 9 # fastest crab speed
 DIRCHANGEFREQ = 2    # % chance of direction change per frame
 LEFT = 'left'
 RIGHT = 'right'
 
 """
-This program has three data structures to represent the player, enemy squirrels, and grass background objects. The data structures are dictionaries with the following keys:
+This program has three data structures to represent the player, enemy crabs, and grass background objects. The data structures are dictionaries with the following keys:
 
 Keys used by all three data structures:
     'x' - the left edge coordinate of the object in the game world (not a pixel coordinate on the screen)
     'y' - the top edge coordinate of the object in the game world (not a pixel coordinate on the screen)
     'rect' - the pygame.Rect object representing where on the screen the object is located.
 Player data structure keys:
-    'surface' - the pygame.Surface object that stores the image of the squirrel which will be drawn to the screen.
+    'surface' - the pygame.Surface object that stores the image of the crab which will be drawn to the screen.
     'facing' - either set to LEFT or RIGHT, stores which direction the player is facing.
     'size' - the width and height of the player in pixels. (The width & height are always the same.)
     'bounce' - represents at what point in a bounce the player is in. 0 means standing (no bounce), up to BOUNCERATE (the completion of the bounce)
-    'health' - an integer showing how many more times the player can be hit by a larger squirrel before dying.
-Enemy Squirrel data structure keys:
-    'surface' - the pygame.Surface object that stores the image of the squirrel which will be drawn to the screen.
-    'movex' - how many pixels per frame the squirrel moves horizontally. A negative integer is moving to the left, a positive to the right.
-    'movey' - how many pixels per frame the squirrel moves vertically. A negative integer is moving up, a positive moving down.
-    'width' - the width of the squirrel's image, in pixels
-    'height' - the height of the squirrel's image, in pixels
+    'health' - an integer showing how many more times the player can be hit by a larger crab before dying.
+Enemy Crab data structure keys:
+    'surface' - the pygame.Surface object that stores the image of the crab which will be drawn to the screen.
+    'movex' - how many pixels per frame the crab moves horizontally. A negative integer is moving to the left, a positive to the right.
+    'movey' - how many pixels per frame the crab moves vertically. A negative integer is moving up, a positive moving down.
+    'width' - the width of the crab's image, in pixels
+    'height' - the height of the crab's image, in pixels
     'bounce' - represents at what point in a bounce the player is in. 0 means standing (no bounce), up to BOUNCERATE (the completion of the bounce)
-    'bouncerate' - how quickly the squirrel bounces. A lower number means a quicker bounce.
-    'bounceheight' - how high (in pixels) the squirrel bounces
+    'bouncerate' - how quickly the crab bounces. A lower number means a quicker bounce.
+    'bounceheight' - how high (in pixels) the crab bounces
 Grass data structure keys:
     'grassImage' - an integer that refers to the index of the pygame.Surface object in GRASSIMAGES used for this grass object
 """
 
 def main():
-    global FPSCLOCK, DISPLAYSURF, BASICFONT, GRASSIMAGES, L_CRABS_IMG, R_CRABS_IMG, L_SQUIR_IMG, R_SQUIR_IMG #References variables outside of the function or designates variables to not be limited
+    global FPSCLOCK, DISPLAYSURF, BASICFONT, GRASSIMAGES, L_CRABS_IMG, R_CRABS_IMG, L_FISH_IMG, R_FISH_IMG #References variables outside of the function or designates variables to not be limited
                                                                                                              # to the function's space. -JL
     pygame.init() #Initializes all of the imported pygame modules. -JL
     FPSCLOCK = pygame.time.Clock() #Creates clock object to track time. -JL
@@ -104,8 +104,8 @@ def main():
     # Loads the image files into the game. -JL
     L_CRABS_IMG = pygame.image.load("CRABS.png")
     R_CRABS_IMG = pygame.transform.flip(L_CRABS_IMG, True, False)
-    L_SQUIR_IMG = pygame.image.load('squirrel.png')
-    R_SQUIR_IMG = pygame.transform.flip(L_SQUIR_IMG, True, False) # Reflects the image. -JL
+    L_FISH_IMG = pygame.image.load('fish.png')
+    R_FISH_IMG = pygame.transform.flip(L_FISH_IMG, True, False) # Reflects the image. -JL
     GRASSIMAGES = []
     for i in range(1, 5): # Creates a loop that adds all files that start with grass. -JL 
         GRASSIMAGES.append(pygame.image.load('grass%s.png' % i)) # Adds an image to the array "GRASSIMAGES". - JL
@@ -193,9 +193,9 @@ def runGame():
     cameray = 0
 
     grassObjs = []    # stores all the grass objects in the game
-    squirrelObjs = [] # stores all the non-player squirrel objects
+    crabObjs = [] # stores all the non-player crab objects
     # stores the player object:
-    playerObj = {'surface': pygame.transform.scale(L_SQUIR_IMG, (STARTSIZE, STARTSIZE)),
+    playerObj = {'surface': pygame.transform.scale(L_FISH_IMG, (STARTSIZE, STARTSIZE)),
                  'facing': LEFT,
                  'size': STARTSIZE,
                  'x': HALF_WINWIDTH,
@@ -218,8 +218,8 @@ def runGame():
         if invulnerableMode and time.time() - invulnerableStartTime > INVULNTIME:
             invulnerableMode = False
 
-        # move all the squirrels
-        for sObj in squirrelObjs:
+        # move all the crabs
+        for sObj in crabObjs:
             # Moves enemies. - JL
             sObj['x'] += sObj['movex']
             sObj['y'] += sObj['movey']
@@ -239,15 +239,15 @@ def runGame():
         for i in range(len(grassObjs) - 1, -1, -1):
             if isOutsideActiveArea(camerax, cameray, grassObjs[i]):
                 del grassObjs[i]
-        for i in range(len(squirrelObjs) - 1, -1, -1):
-            if isOutsideActiveArea(camerax, cameray, squirrelObjs[i]):
-                del squirrelObjs[i]
+        for i in range(len(crabObjs) - 1, -1, -1):
+            if isOutsideActiveArea(camerax, cameray, crabObjs[i]):
+                del crabObjs[i]
 
-        # add more grass & squirrels if we don't have enough.
+        # add more grass & crabs if we don't have enough.
         while len(grassObjs) < NUMGRASS:
             grassObjs.append(makeNewGrass(camerax, cameray))
-        while len(squirrelObjs) < NUMSQUIRRELS:
-            squirrelObjs.append(makeNewCrab(camerax, cameray))
+        while len(crabObjs) < NUMCRABS:
+            crabObjs.append(makeNewCrab(camerax, cameray))
 
         # adjust camerax and cameray if beyond the "camera slack"
         playerCenterx = playerObj['x'] + int(playerObj['size'] / 2)
@@ -273,8 +273,8 @@ def runGame():
             DISPLAYSURF.blit(GRASSIMAGES[gObj['grassImage']], gRect)
 
 
-        # draw the other squirrels
-        for sObj in squirrelObjs:
+        # draw the other crabs
+        for sObj in crabObjs:
             sObj['rect'] = pygame.Rect( (sObj['x'] - camerax,
                                          sObj['y'] - cameray - getBounceAmount(sObj['bounce'], sObj['bouncerate'], sObj['bounceheight']),
                                          sObj['width'],
@@ -282,7 +282,7 @@ def runGame():
             DISPLAYSURF.blit(sObj['surface'], sObj['rect'])
 
 
-        # draw the player squirrel
+        # draw the player crab
         flashIsOn = round(time.time(), 1) * 10 % 2 == 1
         if not gameOverMode and not (invulnerableMode and flashIsOn):
             playerObj['rect'] = pygame.Rect( (playerObj['x'] - camerax,
@@ -310,19 +310,19 @@ def runGame():
                     moveRight = False
                     moveLeft = True
                     if playerObj['facing'] != LEFT: # change player image
-                        playerObj['surface'] = pygame.transform.scale(L_SQUIR_IMG, (playerObj['size'], playerObj['size']))
+                        playerObj['surface'] = pygame.transform.scale(L_FISH_IMG, (playerObj['size'], playerObj['size']))
                     playerObj['facing'] = LEFT
                 elif event.key in (K_RIGHT, K_d):
                     moveLeft = False
                     moveRight = True
                     if playerObj['facing'] != RIGHT: # change player image
-                        playerObj['surface'] = pygame.transform.scale(R_SQUIR_IMG, (playerObj['size'], playerObj['size']))
+                        playerObj['surface'] = pygame.transform.scale(R_FISH_IMG, (playerObj['size'], playerObj['size']))
                     playerObj['facing'] = RIGHT
                 elif winMode and event.key == K_r:
                     return
 
             elif event.type == KEYUP:
-                # stop moving the player's squirrel
+                # stop moving the player's crab
                 if event.key in (K_LEFT, K_a):
                     moveLeft = False
                 elif event.key in (K_RIGHT, K_d):
@@ -347,21 +347,21 @@ def runGame():
                 playerObj['y'] += MOVERATE
                 
               
-            # check if the player has collided with any squirrels
-            for i in range(len(squirrelObjs)-1, -1, -1):
-                sqObj = squirrelObjs[i]
+            # check if the player has collided with any crabs
+            for i in range(len(crabObjs)-1, -1, -1):
+                sqObj = crabObjs[i]
                 if 'rect' in sqObj and playerObj['rect'].colliderect(sqObj['rect']):
-                    # a player/squirrel collision has occurred
+                    # a player/crab collision has occurred
 
                     if sqObj['width'] * sqObj['height'] <= playerObj['size']**2:
-                        # player is larger and eats the squirrel
+                        # player is larger and eats the crab
                         playerObj['size'] += int( (sqObj['width'] * sqObj['height'])**0.2 ) + 1
-                        del squirrelObjs[i]
+                        del crabObjs[i]
 
                         if playerObj['facing'] == LEFT:
-                            playerObj['surface'] = pygame.transform.scale(L_SQUIR_IMG, (playerObj['size'], playerObj['size']))
+                            playerObj['surface'] = pygame.transform.scale(L_FISH_IMG, (playerObj['size'], playerObj['size']))
                         if playerObj['facing'] == RIGHT:
-                            playerObj['surface'] = pygame.transform.scale(R_SQUIR_IMG, (playerObj['size'], playerObj['size']))
+                            playerObj['surface'] = pygame.transform.scale(R_FISH_IMG, (playerObj['size'], playerObj['size']))
 
                         if playerObj['size'] > WINSIZE:
                             winMode = True # turn on "win mode"
@@ -418,9 +418,9 @@ def runSurvival():
     cameray = 0
 
     grassObjs = []    # stores all the grass objects in the game
-    squirrelObjs = [] # stores all the non-player squirrel objects
+    crabObjs = [] # stores all the non-player crab objects
     # stores the player object:
-    playerObj = {'surface': pygame.transform.scale(L_SQUIR_IMG, (STARTSIZE, STARTSIZE)),
+    playerObj = {'surface': pygame.transform.scale(L_FISH_IMG, (STARTSIZE, STARTSIZE)),
                  'facing': LEFT,
                  'size': STARTSIZE,
                  'x': HALF_WINWIDTH,
@@ -443,8 +443,8 @@ def runSurvival():
         if invulnerableMode and time.time() - invulnerableStartTime > INVULNTIME:
             invulnerableMode = False
 
-        # move all the squirrels
-        for sObj in squirrelObjs:
+        # move all the crabs
+        for sObj in crabObjs:
             # Moves enemies. - JL
             sObj['x'] += sObj['movex']
             sObj['y'] += sObj['movey']
@@ -464,15 +464,15 @@ def runSurvival():
         for i in range(len(grassObjs) - 1, -1, -1):
             if isOutsideActiveArea(camerax, cameray, grassObjs[i]):
                 del grassObjs[i]
-        for i in range(len(squirrelObjs) - 1, -1, -1):
-            if isOutsideActiveArea(camerax, cameray, squirrelObjs[i]):
-                del squirrelObjs[i]
+        for i in range(len(crabObjs) - 1, -1, -1):
+            if isOutsideActiveArea(camerax, cameray, crabObjs[i]):
+                del crabObjs[i]
 
-        # add more grass & squirrels if we don't have enough.
+        # add more grass & crabs if we don't have enough.
         while len(grassObjs) < NUMGRASS:
             grassObjs.append(makeNewGrass(camerax, cameray))
-        while len(squirrelObjs) < NUMSQUIRRELS:
-            squirrelObjs.append(makeNewGiantCrab(camerax, cameray))
+        while len(CRABObjs) < NUMCRABS:
+            crabObjs.append(makeNewGiantCrab(camerax, cameray))
 
         # adjust camerax and cameray if beyond the "camera slack"
         playerCenterx = playerObj['x'] + int(playerObj['size'] / 2)
@@ -498,8 +498,8 @@ def runSurvival():
             DISPLAYSURF.blit(GRASSIMAGES[gObj['grassImage']], gRect)
 
 
-        # draw the other squirrels
-        for sObj in squirrelObjs:
+        # draw the other crabs
+        for sObj in crabObjs:
             sObj['rect'] = pygame.Rect( (sObj['x'] - camerax,
                                          sObj['y'] - cameray - getBounceAmount(sObj['bounce'], sObj['bouncerate'], sObj['bounceheight']),
                                          sObj['width'],
@@ -507,7 +507,7 @@ def runSurvival():
             DISPLAYSURF.blit(sObj['surface'], sObj['rect'])
 
 
-        # draw the player squirrel
+        # draw the player crab
         flashIsOn = round(time.time(), 1) * 10 % 2 == 1
         if not gameOverMode and not (invulnerableMode and flashIsOn):
             playerObj['rect'] = pygame.Rect( (playerObj['x'] - camerax,
@@ -535,19 +535,19 @@ def runSurvival():
                     moveRight = False
                     moveLeft = True
                     if playerObj['facing'] != LEFT: # change player image
-                        playerObj['surface'] = pygame.transform.scale(L_SQUIR_IMG, (playerObj['size'], playerObj['size']))
+                        playerObj['surface'] = pygame.transform.scale(L_FISH_IMG, (playerObj['size'], playerObj['size']))
                     playerObj['facing'] = LEFT
                 elif event.key in (K_RIGHT, K_d):
                     moveLeft = False
                     moveRight = True
                     if playerObj['facing'] != RIGHT: # change player image
-                        playerObj['surface'] = pygame.transform.scale(R_SQUIR_IMG, (playerObj['size'], playerObj['size']))
+                        playerObj['surface'] = pygame.transform.scale(R_FISH_IMG, (playerObj['size'], playerObj['size']))
                     playerObj['facing'] = RIGHT
                 elif winMode and event.key == K_r:
                     return
 
             elif event.type == KEYUP:
-                # stop moving the player's squirrel
+                # stop moving the player's crab
                 if event.key in (K_LEFT, K_a):
                     moveLeft = False
                 elif event.key in (K_RIGHT, K_d):
@@ -572,21 +572,21 @@ def runSurvival():
                 playerObj['y'] += MOVERATE
                 
               
-            # check if the player has collided with any squirrels
-            for i in range(len(squirrelObjs)-1, -1, -1):
-                sqObj = squirrelObjs[i]
+            # check if the player has collided with any crabs
+            for i in range(len(crabObjs)-1, -1, -1):
+                sqObj = crabObjs[i]
                 if 'rect' in sqObj and playerObj['rect'].colliderect(sqObj['rect']):
-                    # a player/squirrel collision has occurred
+                    # a player/crab collision has occurred
 
                     if sqObj['width'] * sqObj['height'] <= playerObj['size']**2:
-                        # player is larger and eats the squirrel
+                        # player is larger and eats the crab
                         playerObj['size'] += int( (sqObj['width'] * sqObj['height'])**0.2 ) + 1
-                        del squirrelObjs[i]
+                        del crabObjs[i]
 
                         if playerObj['facing'] == LEFT:
-                            playerObj['surface'] = pygame.transform.scale(L_SQUIR_IMG, (playerObj['size'], playerObj['size']))
+                            playerObj['surface'] = pygame.transform.scale(L_FISH_IMG, (playerObj['size'], playerObj['size']))
                         if playerObj['facing'] == RIGHT:
-                            playerObj['surface'] = pygame.transform.scale(R_SQUIR_IMG, (playerObj['size'], playerObj['size']))
+                            playerObj['surface'] = pygame.transform.scale(R_FISH_IMG, (playerObj['size'], playerObj['size']))
 
                         if playerObj['size'] > WINSIZE:
                             winMode = True # turn on "win mode"
@@ -636,7 +636,7 @@ def getBounceAmount(currentBounce, bounceRate, bounceHeight):
     return int(math.sin( (math.pi / float(bounceRate)) * currentBounce ) * bounceHeight)
 
 def getRandomVelocity():
-    speed = random.randint(SQUIRRELMINSPEED, SQUIRRELMAXSPEED)
+    speed = random.randint(CRABMINSPEED, CRABMAXSPEED)
     if random.randint(0, 1) == 0:
         return speed
     else:
@@ -665,9 +665,9 @@ def makeNewGiantCrab(camerax, cameray):
     sq['x'], sq['y'] = getRandomOffCameraPos(camerax, cameray, sq['width'], sq['height'])
     sq['movex'] = getRandomVelocity()
     sq['movey'] = getRandomVelocity()
-    if sq['movex'] < 0: # squirrel is facing left
+    if sq['movex'] < 0: # crab is facing left
         sq['surface'] = pygame.transform.scale(L_CRABS_IMG, (sq['width'], sq['height']))
-    else: # squirrel is facing right
+    else: # crab is facing right
         sq['surface'] = pygame.transform.scale(R_CRABS_IMG, (sq['width'], sq['height']))
     sq['bounce'] = 0
     sq['bouncerate'] = random.randint(10, 18)
@@ -683,9 +683,9 @@ def makeNewCrab(camerax, cameray):
     sq['x'], sq['y'] = getRandomOffCameraPos(camerax, cameray, sq['width'], sq['height'])
     sq['movex'] = getRandomVelocity()
     sq['movey'] = getRandomVelocity()
-    if sq['movex'] < 0: # squirrel is facing left
+    if sq['movex'] < 0: # crab is facing left
         sq['surface'] = pygame.transform.scale(L_CRABS_IMG, (sq['width'], sq['height']))
-    else: # squirrel is facing right
+    else: # crab is facing right
         sq['surface'] = pygame.transform.scale(R_CRABS_IMG, (sq['width'], sq['height']))
     sq['bounce'] = 0
     sq['bouncerate'] = random.randint(10, 18)
