@@ -380,32 +380,32 @@ def runGame():
 
 def runSurvival():
     
-    MAXHEALTH = 1   # how much health the player starts with
-    # set up variables for the start of a new game
-    invulnerableMode = False  # if the player is invulnerable
-    invulnerableStartTime = 0 # time the player became invulnerable
-    gameOverMode = False      # if the player has lost
-    gameOverStartTime = 0     # time the player lost
-    winMode = False          # if the player has won
-    endtime = 0
+    MAXHEALTH = 1   # deterrmines health player starts with - JT
+    # sets up variables needed for the game - JT
+    invulnerableMode = False  # checks if the player is invulnerable - JT
+    invulnerableStartTime = 0 # time the player became invulnerable - JT
+    gameOverMode = False      # if the player has lost - JT
+    gameOverStartTime = 0     # time the player lost - JT
+    winMode = False           # if the player has won - JT
+    endtime = 0               # Defines variable when game ends - JT
     starttime = time.perf_counter()
     
-    # create the surfaces to hold game text
-    gameOverSurf = BASICFONT.render('You survived: ', True, WHITE) #Sets the text, font, and colour of the game over message. -JL
-    gameOverRect = gameOverSurf.get_rect() #Creates a rectangle for the surface. - JL
-    gameOverRect.center = (HALF_WINWIDTH, HALF_WINHEIGHT) #Sets the positition of the rectangle for the display of the text. -JL
+    # create the surfaces to hold game text - JT
+    gameOverSurf = BASICFONT.render('You survived: ', True, WHITE) #Sets the text, font, and colour of the game over message. -JT
+    gameOverRect = gameOverSurf.get_rect() #Creates a rectangle for the surface. - JT
+    gameOverRect.center = (HALF_WINWIDTH, HALF_WINHEIGHT) #Sets the positition of the rectangle for the display of the text. -JT
 
-    winSurf2 = BASICFONT.render('seconds', True, WHITE) #Sets the text, font, and colour of the game restart message. -JL
-    winRect2 = winSurf2.get_rect() #Creates a rectangle for the surface. - JL
-    winRect2.center = (HALF_WINWIDTH, HALF_WINHEIGHT+60) #Sets the position of the rectangle for the display of the text. -JL
+    winSurf2 = BASICFONT.render('seconds', True, WHITE) #Sets the text, font, and colour of the game restart message. -JT
+    winRect2 = winSurf2.get_rect() #Creates a rectangle for the surface. - JT
+    winRect2.center = (HALF_WINWIDTH, HALF_WINHEIGHT+60) #Sets the position of the rectangle for the display of the text. -JT
 
-    # camerax and cameray are the top left of where the camera view is
+    # camerax and cameray are the top left of where the camera view is - JT
     camerax = 0
     cameray = 0
 
-    grassObjs = []    # stores all the grass objects in the game
-    crabObjs = [] # stores all the non-player crab objects
-    # stores the player object:
+    grassObjs = []    # stores all the grass objects in the game - JT
+    crabObjs = [] # stores all the non-player crab objects - JT
+    # stores the player object and it's variables - JT
     playerObj = {'surface': pygame.transform.scale(L_FISH_IMG, (STARTSIZE, STARTSIZE)),
                  'facing': LEFT,
                  'size': STARTSIZE,
@@ -418,49 +418,49 @@ def runSurvival():
     moveUp    = False
     moveDown  = False
 
-    # start off with some random grass images on the screen
-    for i in range(20): #Changed the range of the for loop so that more images are added onto the screen. -JL
+    # creates random grass images on the screen - JT
+    for i in range(20): #Changed the range of the for loop so that more images are added onto the screen. -JT
         grassObjs.append(makeNewGrass(camerax, cameray))
         grassObjs[i]['x'] = random.randint(0, WINWIDTH)
         grassObjs[i]['y'] = random.randint(0, WINHEIGHT)
 
-    while True: # main game loop
-        # Check if we should turn off invulnerability
+    while True: # main loop - JT
+        # Check if we should turn off invulnerability - JT
         if invulnerableMode and time.time() - invulnerableStartTime > INVULNTIME:
             invulnerableMode = False
 
-        # move all the crabs
+        # move all the crabs - JT
         for sObj in crabObjs:
-            # Moves enemies. - JL
+            # Moves enemies. - JT
             sObj['x'] += sObj['movex']
             sObj['y'] += sObj['movey']
-            # Deleted the bounce code for the enemies. Because crabs don't bounce! -JL
+            # Deleted the bounce code for the enemies - JT
 
-            # random chance they change direction
+            # random chance they change direction - JT
             if random.randint(0, 99) < DIRCHANGEFREQ:
                 sObj['movex'] = getRandomVelocity()
                 sObj['movey'] = getRandomVelocity()
-                if sObj['movex'] > 0: # faces right
+                if sObj['movex'] > 0: # faces right - JT
                     sObj['surface'] = pygame.transform.scale(R_CRABS_IMG, (sObj['width'], sObj['height']))
-                else: # faces left
+                else: # faces left - JT
                     sObj['surface'] = pygame.transform.scale(L_CRABS_IMG, (sObj['width'], sObj['height']))
 
 
-        # go through all the objects and see if any need to be deleted.
+        # go through all the objects and see if any need to be deleted - JT
         for i in range(len(grassObjs) - 1, -1, -1):
             if isOutsideActiveArea(camerax, cameray, grassObjs[i]):
-                del grassObjs[i]
+                del grassObjs[i] # deletes out of range grass
         for i in range(len(crabObjs) - 1, -1, -1):
             if isOutsideActiveArea(camerax, cameray, crabObjs[i]):
-                del crabObjs[i]
+                del crabObjs[i] # deletes out of range crabs
 
-        # add more grass & crabs if we don't have enough.
+        # add more grass & crabs if we don't have enough - JT
         while len(grassObjs) < NUMGRASS:
             grassObjs.append(makeNewGrass(camerax, cameray))
         while len(crabObjs) < NUMCRABS:
             crabObjs.append(makeNewGiantCrab(camerax, cameray))
 
-        # adjust camerax and cameray if beyond the "camera slack"
+        # adjust camerax and cameray if beyond the visible range - JT
         playerCenterx = playerObj['x'] + int(playerObj['size'] / 2)
         playerCentery = playerObj['y'] + int(playerObj['size'] / 2)
         if (camerax + HALF_WINWIDTH) - playerCenterx > CAMERASLACK:
@@ -472,10 +472,10 @@ def runSurvival():
         elif playerCentery - (cameray + HALF_WINHEIGHT) > CAMERASLACK:
             cameray = playerCentery - CAMERASLACK - HALF_WINHEIGHT
 
-        # draw the green background
+        # draw the blue background - JT
         DISPLAYSURF.fill(OCEAN)
 
-        # draw all the grass objects on the screen
+        # renders all the grass objects on the screen - JT
         for gObj in grassObjs:
             gRect = pygame.Rect( (gObj['x'] - camerax,
                                   gObj['y'] - cameray,
@@ -484,7 +484,7 @@ def runSurvival():
             DISPLAYSURF.blit(GRASSIMAGES[gObj['grassImage']], gRect)
 
 
-        # draw the other crabs
+        # draw the other crabs - JT
         for sObj in crabObjs:
             sObj['rect'] = pygame.Rect( (sObj['x'] - camerax,
                                          sObj['y'] - cameray - getBounceAmount(sObj['bounce'], sObj['bouncerate'], sObj['bounceheight']),
@@ -493,7 +493,7 @@ def runSurvival():
             DISPLAYSURF.blit(sObj['surface'], sObj['rect'])
 
 
-        # draw the player crab
+        # draw the player fish - JT
         flashIsOn = round(time.time(), 1) * 10 % 2 == 1
         if not gameOverMode and not (invulnerableMode and flashIsOn):
             playerObj['rect'] = pygame.Rect( (playerObj['x'] - camerax,
@@ -503,10 +503,10 @@ def runSurvival():
             DISPLAYSURF.blit(playerObj['surface'], playerObj['rect'])
 
 
-        # draw the health meter
+        # draw the health meter - JT
         drawHealthMeter(playerObj['health'])
 
-        for event in pygame.event.get(): # event handling loop
+        for event in pygame.event.get(): # Loop handles events - JT
             if event.type == QUIT:
                 terminate()
 
@@ -520,20 +520,20 @@ def runSurvival():
                 elif event.key in (K_LEFT, K_a):
                     moveRight = False
                     moveLeft = True
-                    if playerObj['facing'] != LEFT: # change player image
+                    if playerObj['facing'] != LEFT: # flips player image - JT
                         playerObj['surface'] = pygame.transform.scale(L_FISH_IMG, (playerObj['size'], playerObj['size']))
                     playerObj['facing'] = LEFT
                 elif event.key in (K_RIGHT, K_d):
                     moveLeft = False
                     moveRight = True
-                    if playerObj['facing'] != RIGHT: # change player image
+                    if playerObj['facing'] != RIGHT: # flips player image - JT
                         playerObj['surface'] = pygame.transform.scale(R_FISH_IMG, (playerObj['size'], playerObj['size']))
                     playerObj['facing'] = RIGHT
                 elif winMode and event.key == K_r:
                     return
 
             elif event.type == KEYUP:
-                # stop moving the player's crab
+                # stop moving the player's fish - JT
                 if event.key in (K_LEFT, K_a):
                     moveLeft = False
                 elif event.key in (K_RIGHT, K_d):
