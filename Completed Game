@@ -392,26 +392,25 @@ def runGame():
         
         
 def runSurvival():
+    
     MAXHEALTH = 1   # how much health the player starts with
     # set up variables for the start of a new game
     invulnerableMode = False  # if the player is invulnerable
     invulnerableStartTime = 0 # time the player became invulnerable
     gameOverMode = False      # if the player has lost
     gameOverStartTime = 0     # time the player lost
-    winMode = False           # if the player has won
-
+    winMode = False          # if the player has won
+    endtime = 0
+    starttime = time.perf_counter()
+    
     # create the surfaces to hold game text
-    gameOverSurf = BASICFONT.render('Game Over', True, RED)
-    gameOverRect = gameOverSurf.get_rect()
-    gameOverRect.center = (HALF_WINWIDTH, HALF_WINHEIGHT)
+    gameOverSurf = BASICFONT.render('You survived: ', True, WHITE) #Sets the text, font, and colour of the game over message. -JL
+    gameOverRect = gameOverSurf.get_rect() #Creates a rectangle for the surface. - JL
+    gameOverRect.center = (HALF_WINWIDTH, HALF_WINHEIGHT) #Sets the positition of the rectangle for the display of the text. -JL
 
-    winSurf = BASICFONT.render('You won!', True, WIN)
-    winRect = winSurf.get_rect()
-    winRect.center = (HALF_WINWIDTH, HALF_WINHEIGHT)
-
-    winSurf2 = BASICFONT.render('(Press "r" to restart.)', True, WIN)
-    winRect2 = winSurf2.get_rect()
-    winRect2.center = (HALF_WINWIDTH, HALF_WINHEIGHT + 30)
+    winSurf2 = BASICFONT.render('seconds', True, WHITE) #Sets the text, font, and colour of the game restart message. -JL
+    winRect2 = winSurf2.get_rect() #Creates a rectangle for the surface. - JL
+    winRect2.center = (HALF_WINWIDTH, HALF_WINHEIGHT+60) #Sets the position of the rectangle for the display of the text. -JL
 
     # camerax and cameray are the top left of where the camera view is
     camerax = 0
@@ -471,7 +470,7 @@ def runSurvival():
         # add more grass & crabs if we don't have enough.
         while len(grassObjs) < NUMGRASS:
             grassObjs.append(makeNewGrass(camerax, cameray))
-        while len(CRABObjs) < NUMCRABS:
+        while len(crabObjs) < NUMCRABS:
             crabObjs.append(makeNewGiantCrab(camerax, cameray))
 
         # adjust camerax and cameray if beyond the "camera slack"
@@ -588,9 +587,6 @@ def runSurvival():
                         if playerObj['facing'] == RIGHT:
                             playerObj['surface'] = pygame.transform.scale(R_FISH_IMG, (playerObj['size'], playerObj['size']))
 
-                        if playerObj['size'] > WINSIZE:
-                            winMode = True # turn on "win mode"
-
                     elif not invulnerableMode:
                         # player is smaller and takes damage
                         invulnerableMode = True
@@ -599,21 +595,24 @@ def runSurvival():
                         if playerObj['health'] == 0:
                             gameOverMode = True # turn on "game over mode"
                             gameOverStartTime = time.time()
+                            endtime = time.perf_counter()
+        
         else:
+            display_time = str(round((endtime - starttime), 2))
+            
+            winSurf = BASICFONT.render(display_time, True, WHITE) #Sets the text, font, and colour of the you won message. -JL
+            winRect = winSurf.get_rect() #Creates a rectangle for the surface. -JL
+            winRect.center = (HALF_WINWIDTH, HALF_WINHEIGHT+30) #Sets the position of the rectangle for the display of the text. -JL
+           
             # game is over, show "game over" text
             DISPLAYSURF.blit(gameOverSurf, gameOverRect)
+            DISPLAYSURF.blit(winSurf, winRect)
+            DISPLAYSURF.blit(winSurf2, winRect2)
             if time.time() - gameOverStartTime > GAMEOVERTIME:
                 return # end the current game
 
-        # check if the player has won.
-        if winMode:
-            DISPLAYSURF.blit(winSurf, winRect)
-            DISPLAYSURF.blit(winSurf2, winRect2)
-
         pygame.display.update()
         FPSCLOCK.tick(FPS)
-
-
 
 
 def drawHealthMeter(currentHealth):
