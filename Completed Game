@@ -174,54 +174,57 @@ def runGame():
     winRect2 = winSurf2.get_rect() #Creates a rectangle for the surface. - JL
     winRect2.center = (HALF_WINWIDTH, HALF_WINHEIGHT + 30) #Sets the position of the rectangle for the display of the text. -JL
 
-    # camerax and cameray are the top left of where the camera view is
+    
+    # camerax and cameray are the top left of where the camera view is - HL
     camerax = 0
     cameray = 0
 
-    grassObjs = []    # stores all the grass objects in the game
-    crabObjs = [] # stores all the non-player crab objects
-    # stores the player object:
+    grassObjs = []  # stores all the grass objects in the game - HL
+    crabObjs = []   # stores all the non-player crab objects - HL
+    # stores the player object: - HL
     playerObj = {'surface': pygame.transform.scale(L_FISH_IMG, (STARTSIZE, STARTSIZE)),
                  'facing': LEFT,
-                 'size': STARTSIZE,
-                 'x': HALF_WINWIDTH,
-                 'y': HALF_WINHEIGHT,
-                 'health': MAXHEALTH}
+                 'size': STARTSIZE,   # starting size - HL
+                 'x': HALF_WINWIDTH,  # width of player - HL
+                 'y': HALF_WINHEIGHT, # height of player - HL
+                 'health': MAXHEALTH} # max health of the player - HL
 
-    moveLeft  = False
+    # defines variables for movement - HL
+    moveLeft  = False 
     moveRight = False
     moveUp    = False
     moveDown  = False
 
-    # Start off with some random images on the screen. -JL
-    for i in range(35): #Changed the range of the for loop so that more images are added onto the screen. -JL
+    # Start off with some random images on the screen. - HL
+    for i in range(35): #Changed the range of the for loop so that more images are added onto the screen. - HL
         grassObjs.append(makeNewGrass(camerax, cameray))
+        # randomizes object width and height - HL
         grassObjs[i]['x'] = random.randint(0, WINWIDTH)
         grassObjs[i]['y'] = random.randint(0, WINHEIGHT)
 
-    while True: # main game loop
-        # Check if we should turn off invulnerability
+    while True: # main game loop - HL
+        # Check if we should turn off invulnerability - HL
         if invulnerableMode and time.time() - invulnerableStartTime > INVULNTIME:
             invulnerableMode = False
 
-        # move all the crabs
+        # move all the crabs - HL
         for sObj in crabObjs:
-            # Moves enemies. - JL
+            # Moves enemies. - HL
             sObj['x'] += sObj['movex']
             sObj['y'] += sObj['movey']
-            # Deleted the bounce code for the enemies. Because crabs don't bounce! -JL
+            # Deleted the bounce code for the enemies. Because crabs don't bounce! - HL
 
-            # random chance they change direction
+            # random chance they change direction - HL
             if random.randint(0, 99) < DIRCHANGEFREQ:
                 sObj['movex'] = getRandomVelocity()
                 sObj['movey'] = getRandomVelocity()
-                if sObj['movex'] > 0: # faces right
+                if sObj['movex'] > 0: # faces right - HL
                     sObj['surface'] = pygame.transform.scale(R_CRABS_IMG, (sObj['width'], sObj['height']))
                 else: # faces left
                     sObj['surface'] = pygame.transform.scale(L_CRABS_IMG, (sObj['width'], sObj['height']))
 
 
-        # go through all the objects and see if any need to be deleted.
+        # go through all the objects and see if any need to be deleted. - HL
         for i in range(len(grassObjs) - 1, -1, -1):
             if isOutsideActiveArea(camerax, cameray, grassObjs[i]):
                 del grassObjs[i]
@@ -229,13 +232,13 @@ def runGame():
             if isOutsideActiveArea(camerax, cameray, crabObjs[i]):
                 del crabObjs[i]
 
-        # add more grass & crabs if we don't have enough.
+        # add more grass & crabs if we don't have enough. - HL
         while len(grassObjs) < NUMGRASS:
             grassObjs.append(makeNewGrass(camerax, cameray))
         while len(crabObjs) < NUMCRABS:
             crabObjs.append(makeNewCrab(camerax, cameray))
 
-        # adjust camerax and cameray if beyond the "camera slack"
+        # adjust camerax and cameray if beyond the "camera slack" - HL
         playerCenterx = playerObj['x'] + int(playerObj['size'] / 2)
         playerCentery = playerObj['y'] + int(playerObj['size'] / 2)
         if (camerax + HALF_WINWIDTH) - playerCenterx > CAMERASLACK:
@@ -247,10 +250,10 @@ def runGame():
         elif playerCentery - (cameray + HALF_WINHEIGHT) > CAMERASLACK:
             cameray = playerCentery - CAMERASLACK - HALF_WINHEIGHT
 
-        # draw the green background
+        # draw the blue background - HL
         DISPLAYSURF.fill(OCEAN)
 
-        # draw all the grass objects on the screen
+        # draw all the grass objects on the screen - HL
         for gObj in grassObjs:
             gRect = pygame.Rect( (gObj['x'] - camerax,
                                   gObj['y'] - cameray,
@@ -259,16 +262,16 @@ def runGame():
             DISPLAYSURF.blit(GRASSIMAGES[gObj['grassImage']], gRect)
 
 
-        # draw the other crabs
+        # draw the other crabs - HL
         for sObj in crabObjs:
             sObj['rect'] = pygame.Rect( (sObj['x'] - camerax,
-                                         sObj['y'] - cameray - getBounceAmount(sObj['bounce'], sObj['bouncerate'], sObj['bounceheight']),
+                                         sObj['y'] - cameray,
                                          sObj['width'],
                                          sObj['height']) )
             DISPLAYSURF.blit(sObj['surface'], sObj['rect'])
 
 
-        # draw the player crab
+        # draw the player - HL
         flashIsOn = round(time.time(), 1) * 10 % 2 == 1
         if not gameOverMode and not (invulnerableMode and flashIsOn):
             playerObj['rect'] = pygame.Rect( (playerObj['x'] - camerax,
@@ -278,13 +281,13 @@ def runGame():
             DISPLAYSURF.blit(playerObj['surface'], playerObj['rect'])
 
 
-        # draw the health meter
+        # draw the health bar - HL
         drawHealthMeter(playerObj['health'])
 
         for event in pygame.event.get(): # event handling loop
             if event.type == QUIT:
                 terminate()
-
+            # checks for key inputs - HL
             elif event.type == KEYDOWN:
                 if event.key in (K_UP, K_w):
                     moveDown = False
@@ -295,20 +298,20 @@ def runGame():
                 elif event.key in (K_LEFT, K_a):
                     moveRight = False
                     moveLeft = True
-                    if playerObj['facing'] != LEFT: # change player image
+                    if playerObj['facing'] != LEFT: # change player image depending on input - HL
                         playerObj['surface'] = pygame.transform.scale(L_FISH_IMG, (playerObj['size'], playerObj['size']))
                     playerObj['facing'] = LEFT
                 elif event.key in (K_RIGHT, K_d):
                     moveLeft = False
                     moveRight = True
-                    if playerObj['facing'] != RIGHT: # change player image
+                    if playerObj['facing'] != RIGHT: # change player image depending on input - HL
                         playerObj['surface'] = pygame.transform.scale(R_FISH_IMG, (playerObj['size'], playerObj['size']))
                     playerObj['facing'] = RIGHT
                 elif winMode and event.key == K_r:
                     return
 
             elif event.type == KEYUP:
-                # stop moving the player's crab
+                # stop moving the player - HL
                 if event.key in (K_LEFT, K_a):
                     moveLeft = False
                 elif event.key in (K_RIGHT, K_d):
@@ -322,7 +325,7 @@ def runGame():
                     terminate()
 
         if not gameOverMode:
-            # actually move the player
+            # actually move the player - HL
             if moveLeft:
                 playerObj['x'] -= MOVERATE
             if moveRight:
@@ -333,14 +336,14 @@ def runGame():
                 playerObj['y'] += MOVERATE
                 
               
-            # check if the player has collided with any crabs
+            # check if the player has collided with any crabs - HL
             for i in range(len(crabObjs)-1, -1, -1):
                 sqObj = crabObjs[i]
                 if 'rect' in sqObj and playerObj['rect'].colliderect(sqObj['rect']):
-                    # a player/crab collision has occurred
+                    # a player/crab collision has occurred - HL
 
                     if sqObj['width'] * sqObj['height'] <= playerObj['size']**2:
-                        # player is larger and eats the crab
+                        # player is larger and eats the crab - HL
                         playerObj['size'] += int( (sqObj['width'] * sqObj['height'])**0.2 ) + 1
                         del crabObjs[i]
 
@@ -350,33 +353,31 @@ def runGame():
                             playerObj['surface'] = pygame.transform.scale(R_FISH_IMG, (playerObj['size'], playerObj['size']))
 
                         if playerObj['size'] > WINSIZE:
-                            winMode = True # turn on "win mode"
+                            winMode = True # turn on "win mode" if the player is large enough - HL
 
                     elif not invulnerableMode:
-                        # player is smaller and takes damage
+                        # player takes damage if they are samller - HL
                         invulnerableMode = True
                         invulnerableStartTime = time.time()
                         playerObj['health'] -= 1
                         if playerObj['health'] == 0:
-                            gameOverMode = True # turn on "game over mode"
+                            gameOverMode = True # turn on "game over mode" if health reaches zero - HL
                             gameOverStartTime = time.time()
         else:
-            # game is over, show "game over" text
+            # show "game over" text - HL
             DISPLAYSURF.blit(gameOverSurf, gameOverRect)
             if time.time() - gameOverStartTime > GAMEOVERTIME:
                 return # end the current game
 
-        # check if the player has won.
+        # show winning message - HL
         if winMode:
             DISPLAYSURF.blit(winSurf, winRect)
             DISPLAYSURF.blit(winSurf2, winRect2)
-
+            
+        # display the game - HL
         pygame.display.update()
         FPSCLOCK.tick(FPS)
 
-        
-        
-        
 def runSurvival():
     
     MAXHEALTH = 1   # how much health the player starts with
